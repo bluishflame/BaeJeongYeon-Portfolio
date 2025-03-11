@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export default function Main() {
   const [activeSection, setActiveSection] = useState("home");
   const [navOffset, setNavOffset] = useState(0);
+  const [openProject, setOpenProject] = useState(null);
 
   useEffect(() => {
     const sections = document.querySelectorAll("section");
@@ -40,9 +41,40 @@ export default function Main() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // 프로젝트 데이터 선언 (id 수정)
+  const projects = [
+    {
+      id: 1,
+      name: "Project One",
+      desc: "Description for project one.",
+      tech: ["React", "Tailwind", "Next.js"],
+      img: "/img/project1.png",
+    },
+    {
+      id: 2,
+      name: "Project Two",
+      desc: "Description for project two.",
+      tech: ["Vue", "Node.js", "Express"],
+      img: "/img/project2.png",
+    },
+    {
+      id: 3,
+      name: "Project Three",
+      desc: "Description for project three.",
+      tech: ["Angular", "TypeScript", "Firebase"],
+      img: "/img/project3.png",
+    },
+  ];
+
+  const week1 = {
+    id: 1,
+    name: "Week 1",
+    desc: "This is the first week's assignment, focusing on fundamental design and development skills.",
+    img: "/img/week1.png",
+  };
+
   return (
     <div className="w-full h-screen snap-y snap-mandatory overflow-auto">
-      {/* 네비게이션 바 (모든 섹션에서 항상 보이도록 수정) */}
       <nav
         className="fixed top-12 left-1/2 transform -translate-x-1/2 flex space-x-10 z-50"
         style={{ transform: `translateY(${navOffset}px)` }}
@@ -60,7 +92,6 @@ export default function Main() {
         ))}
       </nav>
 
-      {/* 섹션들 */}
       <section
         id="home"
         className="h-screen flex items-center justify-center snap-start bg-black relative"
@@ -100,7 +131,6 @@ export default function Main() {
         className="h-screen flex items-center justify-center snap-start bg-white"
       >
         <div className="flex flex-col items-center md:flex-row md:items-start w-3/4 max-w-5xl">
-          {/* 왼쪽 - 이미지 (더 왼쪽으로 이동 & 위쪽으로 이동) */}
           <div className="w-full md:w-full flex justify-start md:-ml-20 md:-mt-20">
             <img
               src="/img/AboutTitle.png"
@@ -108,19 +138,12 @@ export default function Main() {
               className="w-100 h-auto"
             />
           </div>
-
-          {/* 오른쪽 - 소개 텍스트 */}
           <div className="w-full md:w-1/2 mt-6 md:mt-0 md:ml-10 text-center md:text-left">
             <h2 className="text-4xl font-bold text-gray-800">About Me</h2>
             <p className="mt-4 text-lg text-gray-600">
               안녕하세요! 저는 UIUX 디자이너이자 프론트엔드 개발자인
               배정연입니다. 사용자 경험을 중심으로 한 디자인을 연구하며,
               인터랙티브한 웹 경험을 개발하는 것에 관심이 많습니다.
-            </p>
-            <p className="mt-2 text-lg text-gray-600">
-              HTML, CSS, JavaScript, React, Next.js 등을 활용하여 다양한
-              프로젝트를 진행하였으며, 디지털 디자인과 개발을 접목하는 작업을
-              즐깁니다.
             </p>
           </div>
         </div>
@@ -130,14 +153,52 @@ export default function Main() {
         id="project"
         className="h-screen flex items-center justify-center snap-start bg-white"
       >
-        <h2 className="text-4xl">Project</h2>
+        <div className="grid grid-cols-3 gap-6 w-3/4 max-w-5xl">
+          {projects.map((project, index) => (
+            <div
+              key={`${project.id}-${index}`} // 수정된 부분
+              className="bg-gray-200 p-4 rounded-lg cursor-pointer"
+              onClick={() =>
+                setOpenProject(openProject === project.id ? null : project.id)
+              }
+            >
+              <img
+                src={project.img}
+                alt={project.name}
+                className="w-full h-auto rounded-md"
+              />
+              <h3 className="text-lg font-bold mt-2">{project.name}</h3>
+              <p className="text-sm text-gray-600">{project.desc}</p>
+              {openProject === project.id && (
+                <div className="mt-2 p-2 bg-white shadow-lg rounded-lg">
+                  <h4 className="text-sm font-semibold">Tech Stack:</h4>
+                  <ul className="list-disc ml-4">
+                    {project.tech.map((tech, index) => (
+                      <li key={index} className="text-sm text-gray-500">
+                        {tech}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </section>
 
       <section
         id="graduation"
         className="h-screen flex items-center justify-center snap-start bg-white"
       >
-        <h2 className="text-4xl">Graduation Project</h2>
+        <div className="w-3/4 max-w-5xl bg-gray-200 p-4 rounded-lg text-center">
+          <img
+            src={week1.img}
+            alt={week1.name}
+            className="w-full h-auto rounded-md"
+          />
+          <h3 className="text-lg font-bold mt-2">{week1.name}</h3>
+          <p className="text-sm text-gray-600">{week1.desc}</p>
+        </div>
       </section>
     </div>
   );
