@@ -6,6 +6,7 @@ export default function Main() {
   const [activeSection, setActiveSection] = useState("home");
   const [navOffset, setNavOffset] = useState(0);
   const [openProject, setOpenProject] = useState(null);
+  const [openWeek, setOpenWeek] = useState(false);
 
   useEffect(() => {
     const sections = document.querySelectorAll("section");
@@ -41,7 +42,6 @@ export default function Main() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 프로젝트 데이터 선언 (id 수정)
   const projects = [
     {
       id: 1,
@@ -154,13 +154,11 @@ export default function Main() {
         className="h-screen flex items-center justify-center snap-start bg-white"
       >
         <div className="grid grid-cols-3 gap-6 w-3/4 max-w-5xl">
-          {projects.map((project, index) => (
+          {projects.map((project) => (
             <div
-              key={`${project.id}-${index}`} // 수정된 부분
+              key={project.id}
               className="bg-gray-200 p-4 rounded-lg cursor-pointer"
-              onClick={() =>
-                setOpenProject(openProject === project.id ? null : project.id)
-              }
+              onClick={() => setOpenProject(project)}
             >
               <img
                 src={project.img}
@@ -169,18 +167,6 @@ export default function Main() {
               />
               <h3 className="text-lg font-bold mt-2">{project.name}</h3>
               <p className="text-sm text-gray-600">{project.desc}</p>
-              {openProject === project.id && (
-                <div className="mt-2 p-2 bg-white shadow-lg rounded-lg">
-                  <h4 className="text-sm font-semibold">Tech Stack:</h4>
-                  <ul className="list-disc ml-4">
-                    {project.tech.map((tech, index) => (
-                      <li key={index} className="text-sm text-gray-500">
-                        {tech}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           ))}
         </div>
@@ -190,7 +176,10 @@ export default function Main() {
         id="graduation"
         className="h-screen flex items-center justify-center snap-start bg-white"
       >
-        <div className="w-3/4 max-w-5xl bg-gray-200 p-4 rounded-lg text-center">
+        <div
+          className="w-3/4 max-w-5xl bg-gray-200 p-4 rounded-lg text-center cursor-pointer"
+          onClick={() => setOpenWeek(true)}
+        >
           <img
             src={week1.img}
             alt={week1.name}
@@ -200,6 +189,61 @@ export default function Main() {
           <p className="text-sm text-gray-600">{week1.desc}</p>
         </div>
       </section>
+
+      {/* 프로젝트 모달 */}
+      {openProject && (
+        <Modal onClose={() => setOpenProject(null)}>
+          <h2 className="text-2xl font-bold">{openProject.name}</h2>
+          <img
+            src={openProject.img}
+            alt={openProject.name}
+            className="w-full h-auto rounded-md my-4"
+          />
+          <p className="text-gray-700">{openProject.desc}</p>
+          <h3 className="text-lg font-semibold mt-4">Tech Stack:</h3>
+          <ul className="list-disc ml-4 text-gray-600">
+            {openProject.tech.map((tech, index) => (
+              <li key={index}>{tech}</li>
+            ))}
+          </ul>
+        </Modal>
+      )}
+
+      {/* Week 모달 */}
+      {openWeek && (
+        <Modal onClose={() => setOpenWeek(false)}>
+          <h2 className="text-2xl font-bold">{week1.name}</h2>
+          <img
+            src={week1.img}
+            alt={week1.name}
+            className="w-full h-auto rounded-md my-4"
+          />
+          <p className="text-gray-700">{week1.desc}</p>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// 모달 컴포넌트
+function Modal({ children, onClose }) {
+  return (
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-300"
+      style={{
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      <div className="bg-white p-6 rounded-lg w-3/4 max-w-lg relative shadow-lg">
+        <button
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          onClick={onClose}
+        >
+          ✕
+        </button>
+        {children}
+      </div>
     </div>
   );
 }
