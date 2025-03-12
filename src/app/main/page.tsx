@@ -1,9 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
+
+interface ModalProps {
+  children: ReactNode;
+  onClose: () => void;
+}
+
+interface Project {
+  id: number;
+  name: string;
+  desc: string;
+  tech: string[];
+  img: string;
+  github: string;
+}
 
 // 모달 컴포넌트
-function Modal({ children, onClose }) {
+function Modal({ children, onClose }: ModalProps) {
   return (
     <div
       className="fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-300"
@@ -37,8 +51,8 @@ function Modal({ children, onClose }) {
 export default function Main() {
   const [activeSection, setActiveSection] = useState("home");
   const [navOffset, setNavOffset] = useState(0);
-  const [openProject, setOpenProject] = useState(null);
   const [openWeek, setOpenWeek] = useState(false);
+  const [openProject, setOpenProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const sections = document.querySelectorAll("section");
