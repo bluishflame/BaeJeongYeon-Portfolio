@@ -16,7 +16,6 @@ interface Project {
   github: string;
 }
 
-// 모달 컴포넌트
 function Modal({ children, onClose }: ModalProps) {
   return (
     <div
@@ -27,7 +26,7 @@ function Modal({ children, onClose }: ModalProps) {
       }}
     >
       <div
-        className="bg-white p-10 rounded-lg w-4/5 max-w-4xl h-auto max-h-[95vh] relative shadow-lg"
+        className="bg-white w-full h-full flex items-center justify-center p-10 relative shadow-lg"
         style={{
           overflowY: "auto",
           scrollbarWidth: "none",
@@ -36,12 +35,12 @@ function Modal({ children, onClose }: ModalProps) {
       >
         <style>{`::-webkit-scrollbar { display: none; }`}</style>
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          className="absolute top-5 right-5 text-gray-500 hover:text-gray-700 text-3xl"
           onClick={onClose}
         >
           ✕
         </button>
-        {children}
+        <div className="w-full max-w-5xl">{children}</div>
       </div>
     </div>
   );
@@ -52,6 +51,7 @@ export default function Main() {
   const [activeSection, setActiveSection] = useState("home");
   const [navOffset, setNavOffset] = useState(0);
   const [openWeek, setOpenWeek] = useState(false);
+  const [openWeek2, setOpenWeek2] = useState(false);
   const [openProject, setOpenProject] = useState<Project | null>(null);
 
   useEffect(() => {
@@ -118,6 +118,12 @@ export default function Main() {
     id: 1,
     name: "Graduation Project Week1",
     desc: "디자인 철학 및 취업 희망 기업 공고 분석",
+  };
+
+  const week2 = {
+    id: 2,
+    name: "Graduation Project Week2",
+    desc: "프로토타입 제작 및 유저 테스트",
   };
 
   return (
@@ -244,17 +250,23 @@ export default function Main() {
             </a>
           </Modal>
         )}
-
         <section
           id="graduation"
-          className="h-screen flex items-center justify-center snap-start bg-white"
+          className="h-screen flex flex-col items-center justify-center snap-start bg-white space-y-6"
         >
           <div
             className="w-3/4 max-w-5xl bg-gray-200 p-4 rounded-lg text-center cursor-pointer"
-            onClick={() => setOpenWeek(true)}
+            onClick={() => setOpenWeek1(true)}
           >
             <h3 className="text-lg font-bold mt-2">{week1.name}</h3>
             <p className="text-sm text-gray-600">{week1.desc}</p>
+          </div>
+          <div
+            className="w-3/4 max-w-5xl bg-gray-200 p-4 rounded-lg text-center cursor-pointer"
+            onClick={() => setOpenWeek2(true)}
+          >
+            <h3 className="text-lg font-bold mt-2">{week2.name}</h3>
+            <p className="text-sm text-gray-600">{week2.desc}</p>
           </div>
         </section>
       </div>
@@ -331,6 +343,24 @@ export default function Main() {
               </p>
             </li>
           </ul>
+        </Modal>
+      )}
+
+      {openWeek2 && (
+        <Modal onClose={() => setOpenWeek2(false)}>
+          <h2 className="text-3xl font-bold mb-6">{week2.name}</h2>
+          <p className="text-lg text-gray-500 mb-6">{week2.desc}</p>
+          <h3 className="text-xl font-bold mt-6">프로토타입 제작</h3>
+          <p className="mt-2 text-gray-700">
+            이번 주에는 디자인의 핵심 요소를 정리하고, 프로토타입을 제작하는
+            과정이 포함됩니다. Adobe XD 및 Figma를 활용하여 인터랙션을
+            테스트하며, 사용자 피드백을 반영하는 작업을 진행합니다.
+          </p>
+          <h3 className="text-xl font-bold mt-6">유저 테스트</h3>
+          <p className="mt-2 text-gray-700">
+            사용자를 대상으로 한 초기 테스트를 진행하여 UX 개선점을 도출합니다.
+            이를 통해 직관적인 사용성을 확보하고, 최종 디자인으로 발전시킵니다.
+          </p>
         </Modal>
       )}
     </>
