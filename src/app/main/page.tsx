@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useState, ReactNode } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface ModalProps {
   children: ReactNode;
@@ -25,22 +30,14 @@ function Modal({ children, onClose }: ModalProps) {
         backdropFilter: "blur(8px)",
       }}
     >
-      <div
-        className="bg-white w-full h-full flex items-center justify-center p-10 relative shadow-lg"
-        style={{
-          overflowY: "auto",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}
-      >
-        <style>{`::-webkit-scrollbar { display: none; }`}</style>
+      <div className="bg-white w-full h-full flex flex-col items-center justify-center p-10 relative shadow-lg">
         <button
           className="absolute top-5 right-5 text-gray-500 hover:text-gray-700 text-3xl"
           onClick={onClose}
         >
           ✕
         </button>
-        <div className="w-full max-w-5xl">{children}</div>
+        {children}
       </div>
     </div>
   );
@@ -125,6 +122,39 @@ export default function Main() {
     name: "Graduation Project Week2",
     desc: "프로토타입 제작 및 유저 테스트",
   };
+
+  const week2Images = [
+    "대지 1.png",
+    "대지 2.png",
+    "대지 3.png",
+    "대지 4.png",
+    "대지 5.png",
+    "대지 6.png",
+    "대지 7.png",
+    "대지 8.png",
+    "대지 9.png",
+    "대지 10.png",
+    "대지 11.png",
+    "대지 12.png",
+  ];
+
+  {
+    week2Images.map((fileName, index) => (
+      <img
+        key={index}
+        src={`/img/week2/${fileName}`}
+        alt={`Week2 Image ${index + 1}`}
+        className="w-full h-auto max-w-5xl rounded-lg shadow-lg"
+        style={{
+          objectFit: "contain",
+          maxHeight: "none",
+        }}
+        onError={(e) =>
+          console.error(`이미지 로드 실패: ${e.currentTarget.src}`)
+        }
+      />
+    ));
+  }
 
   return (
     <>
@@ -345,22 +375,39 @@ export default function Main() {
           </ul>
         </Modal>
       )}
-
+      {/* Graduation Project Week2 모달 */}
       {openWeek2 && (
         <Modal onClose={() => setOpenWeek2(false)}>
-          <h2 className="text-3xl font-bold mb-6">{week2.name}</h2>
-          <p className="text-lg text-gray-500 mb-6">{week2.desc}</p>
-          <h3 className="text-xl font-bold mt-6">프로토타입 제작</h3>
-          <p className="mt-2 text-gray-700">
-            이번 주에는 디자인의 핵심 요소를 정리하고, 프로토타입을 제작하는
-            과정이 포함됩니다. Adobe XD 및 Figma를 활용하여 인터랙션을
-            테스트하며, 사용자 피드백을 반영하는 작업을 진행합니다.
-          </p>
-          <h3 className="text-xl font-bold mt-6">유저 테스트</h3>
-          <p className="mt-2 text-gray-700">
-            사용자를 대상으로 한 초기 테스트를 진행하여 UX 개선점을 도출합니다.
-            이를 통해 직관적인 사용성을 확보하고, 최종 디자인으로 발전시킵니다.
-          </p>
+          <div className="text-center w-full"></div>
+
+          {/* ✅ Swiper.js 적용 - 가로 슬라이드 */}
+          <div className="w-full max-w-5xl mt-10">
+            <Swiper
+              modules={[Navigation, Pagination]}
+              spaceBetween={30}
+              slidesPerView={1} // 한 번에 한 장씩 표시
+              navigation
+              pagination={{ clickable: true }}
+            >
+              {week2Images.map((fileName, index) => (
+                <SwiperSlide key={index}>
+                  <img
+                    src={`/img/week2/${encodeURIComponent(fileName)}`}
+                    alt={`Week2 Image ${index + 1}`}
+                    className="w-full h-auto rounded-lg shadow-lg"
+                    style={{ objectFit: "contain", maxHeight: "90vh" }}
+                    onError={(e) =>
+                      console.error(
+                        `이미지 로드 실패: ${decodeURIComponent(
+                          e.currentTarget.src
+                        )}`
+                      )
+                    }
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
         </Modal>
       )}
     </>
