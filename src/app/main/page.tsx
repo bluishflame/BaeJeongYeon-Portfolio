@@ -286,7 +286,7 @@ export default function Main() {
         >
           <div
             className="w-3/4 max-w-5xl bg-gray-200 p-4 rounded-lg text-center cursor-pointer"
-            onClick={() => setOpenWeek1(true)}
+            onClick={() => setOpenWeek(true)}
           >
             <h3 className="text-lg font-bold mt-2">{week1.name}</h3>
             <p className="text-sm text-gray-600">{week1.desc}</p>
